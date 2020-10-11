@@ -14,11 +14,13 @@ export interface Resource {
     link: string
 }
 
-export interface Skill {
-    skillName: string,
-    activeLearning: boolean
+export interface SkillArray {
+    id: number,
+    activeLearning: boolean | undefined,
+    tag: Tag,
+    tagId: number,
 }
 
-export interface Tag {
-    skillName: string
+interface Tag {
+    skillName: string,
 }

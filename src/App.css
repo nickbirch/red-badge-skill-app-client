@@ -1,33 +1,20 @@
 .App {
   text-align: center;
+  background: linear-gradient(179.88deg, rgba(0, 0, 0, 0.9) 0.1%, rgba(44, 44, 44, 0.81) 108.25%);
+  ;
+  min-height: 160vh;
+  min-width: 90vh;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+#entryForm .MuiOutlinedInput-notchedOutline {
+  border-color: #fff !important;
 }
 
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+#email, #email-label, #password, #password-label, #firstName, #firstName-label, #lastName, #lastName-label {
+  color: #fff !important;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.MuiTypography-h5 {
+  font-weight: 500 !important;
 }

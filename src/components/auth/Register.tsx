@@ -1,12 +1,52 @@
-import React, { Component, MouseEvent } from 'react'
+import React, { Component } from 'react'
 import { User } from '../../types';
+import { Redirect } from 'react-router-dom'
+import {WithStyles, withStyles, createStyles, Theme} from '@material-ui/core/styles';
+import logo from '../../assets/rocket.svg'
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
+import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Container from '@material-ui/core/Container';
 
-interface AcceptedProps {
-    storeUserDetails: (userToken: string | null) => void,
-    baseURL: string
+interface AcceptedProps extends WithStyles<typeof styles> {
+    storeUserDetails: (userToken: string, isAdmin: boolean, userId: number | null, firstName: string,) => void,
+    baseURL: string,
+    toggleFormType(): void
 }
 
-export class Register extends Component<AcceptedProps, User> {
+interface RegisterType extends User {
+    loggedIn: boolean
+}
+
+const styles = (theme: Theme) =>
+createStyles({
+    root: {
+      color: theme.palette.primary.contrastText
+      },
+    paper: {
+        paddingTop: theme.spacing(8),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      },
+      avatar: {
+        margin: theme.spacing(1),
+        backgroundColor: "transparent"
+      },
+      form: {
+        width: '100%', // Fix IE 11 issue.
+        marginTop: theme.spacing(1),
+      },
+      submit: {
+        margin: theme.spacing(3, 0, 2),
+      },
+    });
+
+export class Register extends Component<AcceptedProps, RegisterType> {
     constructor(props: AcceptedProps) {
         super(props);
         this.state = {
@@ -14,7 +54,8 @@ export class Register extends Component<AcceptedProps, User> {
             lastName: '',
             email: '',
             password: '',
-            isAdmin: false
+            isAdmin: false,
+            loggedIn: false
           };
       }
 
@@ -43,7 +84,7 @@ export class Register extends Component<AcceptedProps, User> {
       }
 
 
-      handleSubmit = (e: MouseEvent) => {
+      handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
         let url: string = `${this.props.baseURL}user/register`;
         let userObject: User = {
@@ -73,10 +114,13 @@ export class Register extends Component<AcceptedProps, User> {
         .then(json => {
     
             if (json !== 500 && json !== 401) {
-                this.props.storeUserDetails(json.sessionToken);
+                this.props.storeUserDetails(json.sessionToken, json.isAdmin, json.id, json.firstName);
                 // console.log("Login.js user", json);
                 // console.log("Login.js json.sessionToken", json.sessionToken);
                 //toggle();
+                this.setState({
+                    loggedIn: true
+                })
             } else {
                 // console.log("Login.js error", json);
                // setErrForm("Login failed.");
@@ -91,16 +135,100 @@ export class Register extends Component<AcceptedProps, User> {
 
     
     render() {
+        if(this.state.loggedIn){
+            return <Redirect to="/" />
+        }
+        const { classes }  = this.props;
         return (
-            <div>
-                <input type="text" id="firstName" placeholder="First Name" value={this.state.firstName} onChange={(e) => {this.updateFirstName(e);}} />
-                <input type="text" id="lastName" placeholder="Last Name" value={this.state.lastName} onChange={(e) => {this.updateLastName(e);}} />
-                <input type="text" id="txtEmail" placeholder="Email Address" value={this.state.email} onChange={(e) => {this.updateEmail(e);}} />
-                <input type="password" id="pwd" placeholder="Password" value={this.state.password} onChange={(e) => {this.updatePassword(e);}} />
-                <button  onClick={this.handleSubmit}>Register</button>
+
+            <Container component="main" maxWidth="xs" className={classes.root}>
+            <CssBaseline />
+            <div className={classes.paper}>
+              <Avatar className={classes.avatar}>
+              <img src={logo} alt={"logo"} height="35px" />
+              </Avatar>
+              <Typography component="h1" variant="h5">
+                Sign up
+              </Typography>
+              <form className={classes.form} noValidate onSubmit={this.handleSubmit}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      autoComplete="fname"
+                      name="firstName"
+                      variant="outlined"
+                      required
+                      fullWidth
+                      id="firstName"
+                      label="First Name"
+                      autoFocus
+                      value={this.state.firstName}
+                      onChange={this.updateFirstName}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      variant="outlined"
+                      required
+                      fullWidth
+                      id="lastName"
+                      label="Last Name"
+                      name="lastName"
+                      autoComplete="lname"
+                      value={this.state.lastName}
+                      onChange={this.updateLastName}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      variant="outlined"
+                      required
+                      fullWidth
+                      id="email"
+                      label="Email Address"
+                      name="email"
+                      autoComplete="email"
+                      value={this.state.email}
+                      onChange={this.updateEmail}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      variant="outlined"
+                      required
+                      fullWidth
+                      name="password"
+                      label="Password"
+                      type="password"
+                      id="password"
+                      autoComplete="current-password"
+                      value={this.state.password}
+                      onChange={this.updatePassword}
+                    />
+                  </Grid>
+                </Grid>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                >
+                  Sign Up
+                </Button>
+                <Grid container>
+                  <Grid item>
+                    <Link variant="body2" onClick={this.props.toggleFormType}
+                    className={classes.root}>
+                      Already have an account? Sign In
+                    </Link>
+                  </Grid>
+                </Grid>
+              </form>
             </div>
+          </Container>
         )
     }
 }
 
-export default Register
+export default withStyles(styles, {withTheme: true})(Register)
