@@ -32,6 +32,7 @@ createStyles({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        fontSize: '1.5rem',
       },
       avatar: {
         margin: theme.spacing(1),
@@ -148,7 +149,7 @@ export class Register extends Component<AcceptedProps, RegisterType> {
               <img src={logo} alt={"logo"} height="35px" />
               </Avatar>
               <Typography component="h1" variant="h5">
-                Sign up
+                Sign Up
               </Typography>
               <form className={classes.form} noValidate onSubmit={this.handleSubmit}>
                 <Grid container spacing={2}>

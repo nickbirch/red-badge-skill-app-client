@@ -32,6 +32,7 @@ createStyles({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        fontSize: '1.5rem',
       },
       avatar: {
         margin: theme.spacing(1),
@@ -106,10 +107,7 @@ export class Login extends Component<AcceptedProps, LoginType> {
                 this.setState({
                     loggedIn: true
                 })
-            } else {
-
-            };
-    
+            }
         })
         .catch(err => {
             console.log(err);

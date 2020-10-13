@@ -8,10 +8,12 @@ export interface User {
 
 
 export interface Resource {
+    id: number,
     title: string,
     description: string,
     type: string,
     link: string
+    tags?: Tag[]
 }
 
 export interface SkillArray {
@@ -21,6 +23,6 @@ export interface SkillArray {
     tagId: number,
 }
 
-interface Tag {
+export interface Tag {
     skillName: string,
 }

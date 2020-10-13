@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import SkillChip from "../components/skills/SkillChip";
-import NewSkill from "../components/skills/NewSkill";
+import SkillChips from "../components/skills/SkillChips";
 import EditSkill from '../components/skills/EditSkill';
 import ResourcesView from '../components/resources/ResourcesView';
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -38,7 +37,7 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
         width: "90vh",
-        height: "140vh",
+        minHeight: "140vh",
         backgroundColor: "#3585bb",
         paddingTop: "3rem",
         borderRadius: "1.75rem",
@@ -54,16 +53,13 @@ const styles = (theme: Theme) =>
       textTransform: "uppercase",
       background: "linear-gradient(147.85deg, #00BFC7 11.75%, rgba(39, 72, 241, 0.9) 86.71%)",
       color: theme.palette.primary.contrastText,
+      fontSize: '2rem',
     },
     headerTwo: {
         textTransform: "uppercase",
-        marginTop: '2rem',
+        marginTop: '3rem',
         color: theme.palette.primary.contrastText,
-      },
-    chip: {
-        margin: theme.spacing(0.5),
-        background: "linear-gradient(147.85deg, #00C102 11.75%, #00C102 86.71%)",
-        boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.5)",
+        fontSize: '1.75rem',
       },
   });
 
@@ -97,7 +93,7 @@ export class UserView extends Component<AcceptedProps, IState> {
           activeTagName: json[0].tag.skillName,
           activeTagId: json[0].tagId,
         });
-        console.log(this.state.skillArray);
+        //console.log(this.state.skillArray);
       })
       .catch((err) => {
         console.log(err);
@@ -135,8 +131,7 @@ export class UserView extends Component<AcceptedProps, IState> {
               title={`${this.props.firstName}'s Skills `}
             />
             <CardContent>
-              <SkillChip skills={this.state.skillArray} baseURL={this.props.baseURL} updateActiveSkillId={this.updateActiveSkillId} userToken={this.props.userToken} getSkills={this.getSkills} handleEditClick={this.handleEditClick}/>
-              <NewSkill userId={this.props.userId} userToken={this.props.userToken} baseURL={this.props.baseURL} getSkills={this.getSkills} />
+              <SkillChips skills={this.state.skillArray} baseURL={this.props.baseURL} updateActiveSkillId={this.updateActiveSkillId} userToken={this.props.userToken} getSkills={this.getSkills} handleEditClick={this.handleEditClick}/>
             </CardContent>
           </Card>
           <Typography component="h1"  variant="h4" className={classes.headerTwo}>

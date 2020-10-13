@@ -5,6 +5,7 @@ import {
     withStyles,
     Theme,
   } from "@material-ui/core/styles";
+import ResourceCard from './ResourceCard';
 import { Resource } from '../../types';
 
 
@@ -40,7 +41,6 @@ export class ResourceView extends Component<AcceptedProps, IState> {
 
     getResources = () => {
         let url = `${this.props.baseURL}tag/${this.props.activeTagId}`;
-        console.log(url)
         fetch(url, {
         method: "GET",
         headers: new Headers({
@@ -51,9 +51,9 @@ export class ResourceView extends Component<AcceptedProps, IState> {
         .then((res) => res.json())
         .then((json) => {
             this.setState({
-            resourcesArray: json,
+            resourcesArray: json.resources,
             });
-            console.log(this.state.resourcesArray);
+            //console.log(this.state.resourcesArray);
         })
         .catch((err) => {
             console.log(err);
@@ -70,7 +70,7 @@ render() {
         const { classes } = this.props;
   return (
     <div className={classes.root}>
-        I'm the Resource View
+        <ResourceCard resourcesArray={this.state.resourcesArray} baseURL={this.props.baseURL} userToken={this.props.userToken} getResources={this.getResources} activeTagId={this.props.activeTagId} />
     </div>
 );
   }

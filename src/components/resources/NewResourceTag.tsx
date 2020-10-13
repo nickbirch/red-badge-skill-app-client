@@ -14,9 +14,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
 import Chip from "@material-ui/core/Chip";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import SaveIcon from '@material-ui/icons/Save';
@@ -25,7 +22,8 @@ import CancelIcon from '@material-ui/icons/Cancel';
 interface AcceptedProps extends WithStyles<typeof styles> {
   userToken: string;
   baseURL: string;
-  getSkills(): void;
+  resourceId: number;
+  getResourceTags(): void;
 }
 
 interface TagArray {
@@ -35,7 +33,6 @@ interface TagArray {
 interface IState {
   tagArray: TagArray[];
   open: boolean;
-  activeLearning: boolean;
   searchField: string;
 }
 
@@ -60,13 +57,12 @@ const styles = (theme: Theme) =>
     }
   });
 
-export class NewSkill extends Component<AcceptedProps, IState> {
+export class NewResourceTag extends Component<AcceptedProps, IState> {
   constructor(props: AcceptedProps) {
     super(props);
     this.state = {
       tagArray: [],
       open: false,
-      activeLearning: true,
       searchField: "",
     };
   }
@@ -93,36 +89,10 @@ export class NewSkill extends Component<AcceptedProps, IState> {
       });
   };
 
-  handleClickOpen = () => {
-    this.getTags();
-    this.setState({
-      open: true,
-    });
-  };
-
-  handleClose = () => {
-    this.setState({
-      open: false,
-    });
-  };
-
-  handleToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({
-      activeLearning: event.target.checked,
-    });
-  };
-
-  updateSearchField = (value: string) => {
-    this.setState({
-      searchField: value,
-    });
-  };
-
-  addNewSkill = () => {
-    let url: string = `${this.props.baseURL}myskills/add`;
-    let skillObject: { skillName: string; activeLearning: boolean } = {
+  addNewTag = () => {
+    let url: string = `${this.props.baseURL}resource/addtag/${this.props.resourceId}`;
+    let skillObject: { skillName: string; } = {
       skillName: this.state.searchField,
-      activeLearning: this.state.activeLearning,
     };
 
     fetch(url, {
@@ -144,11 +114,30 @@ export class NewSkill extends Component<AcceptedProps, IState> {
         this.setState({
             open: false,
           });
-        this.props.getSkills();
+          this.props.getResourceTags();
       })
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  handleClickOpen = () => {
+    this.getTags();
+    this.setState({
+      open: true,
+    });
+  };
+
+  handleClose = () => {
+    this.setState({
+      open: false,
+    });
+  };
+
+  updateSearchField = (value: string) => {
+    this.setState({
+      searchField: value,
+    });
   };
 
   render() {
@@ -157,7 +146,8 @@ export class NewSkill extends Component<AcceptedProps, IState> {
       <React.Fragment>
         <CssBaseline />
         <Chip
-          label={"Add Skill"}
+          label={"Add Tag"}
+          size="small"
           onClick={this.handleClickOpen}
           onDelete={this.handleClickOpen}
           className={classes.chip}
@@ -170,20 +160,19 @@ export class NewSkill extends Component<AcceptedProps, IState> {
           aria-labelledby="form-dialog-title"
         >
             <div className={classes.flex}>
-          <DialogTitle id="form-dialog-title">Add Skill</DialogTitle>
+          <DialogTitle id="form-dialog-title">Add Tag</DialogTitle>
           <Button onClick={this.handleClose} size="large" color="primary" startIcon={<CancelIcon />} >
           </Button>
           </div>
           <DialogContent>
             <DialogContentText>
-              To add a new skill, start typing your search below to select one.
+              To add a new tag, start typing your search below to select one.
             </DialogContentText>
           </DialogContent>
           <div style={{ width: 300 }}>
             <Autocomplete
               className={classes.search}
               disableClearable
-              //multiple https://material-ui.com/components/autocomplete/#multiple-values
               inputValue={this.state.searchField}
               onInputChange={(event, newInputValue) => {
                 this.updateSearchField(newInputValue);
@@ -204,22 +193,8 @@ export class NewSkill extends Component<AcceptedProps, IState> {
               )}
             />
           </div>
-          <FormGroup row>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={this.state.activeLearning}
-                  onChange={this.handleToggle}
-                  name="activeLearning"
-                  color="primary"
-                />
-              }
-              label="Actively Learning"
-              className={classes.active}
-            />
-          </FormGroup>
           <DialogActions>
-            <Button onClick={this.addNewSkill} color="primary" variant="contained" startIcon={<SaveIcon />}>
+            <Button onClick={this.addNewTag} color="primary" variant="contained" startIcon={<SaveIcon />}>
               Save
             </Button>
           </DialogActions>
@@ -229,4 +204,4 @@ export class NewSkill extends Component<AcceptedProps, IState> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(NewSkill);
+export default withStyles(styles, { withTheme: true })(NewResourceTag);
