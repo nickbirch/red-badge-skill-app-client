@@ -12,7 +12,7 @@ import { Resource } from '../../types';
 interface AcceptedProps  extends WithStyles<typeof styles> {
     userToken: string;
     baseURL: string;
-    activeTagId: number | null,
+    activeTagId: number | null | undefined,
 }
 
 interface IState {

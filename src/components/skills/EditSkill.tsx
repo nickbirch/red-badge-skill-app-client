@@ -24,7 +24,7 @@ interface AcceptedProps extends WithStyles<typeof styles> {
   baseURL: string;
   getSkills(): void;
   handleEditClick(arg: boolean): void;
-  skillToEditId: number | null,
+  skillToEditId: number | null | undefined,
   skillToEditName: string,
   skillToEditBoolean: boolean | undefined,
   editOpen: boolean,

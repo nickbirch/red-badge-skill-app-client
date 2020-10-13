@@ -18,6 +18,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import CancelIcon from '@material-ui/icons/Cancel';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 
 interface AcceptedProps extends WithStyles<typeof styles> {
@@ -105,6 +106,30 @@ export class EditResource extends Component<AcceptedProps, IState> {
       });
   }
 
+  handleRemove = () => {
+    let url: string = `${this.props.baseURL}resource/delete/${this.props.currentState.id}`;
+
+    fetch(url, {
+      method: "DELETE",
+      headers: new Headers({
+        "Content-Type": "application/json",
+        Authorization: this.props.userToken,
+      })
+    })
+      .then((res) => {
+        if (res.status === 200) {
+            this.props.handleClose()
+            this.props.getResources();
+        } else {
+          return res.status;
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+
   render() {
     const { classes } = this.props;
 
@@ -170,7 +195,10 @@ export class EditResource extends Component<AcceptedProps, IState> {
                 <MenuItem value={'Documentation'}>Documentation</MenuItem>
                 </Select>
             </FormControl>  
-          <DialogActions>
+          <DialogActions className={classes.flex}>
+            <Button variant="contained" startIcon={<DeleteIcon />} onClick={this.handleRemove} color="secondary">
+              Remove
+            </Button>
             <Button variant="contained" type="submit" color="primary" startIcon={<SaveIcon />}>
               Save
             </Button>

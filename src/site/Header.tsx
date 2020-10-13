@@ -80,7 +80,7 @@ const Header: React.FunctionComponent<IProps> = (props) => {
           <UserView userId={props.userId} firstName={props.firstName} userToken={props.userToken} baseURL={props.baseURL}/>
         </Route>
         <Route exact path="/admin">
-          <AdminView />
+          <AdminView userToken={props.userToken} baseURL={props.baseURL}/>
         </Route>
       </Switch>
     </div>

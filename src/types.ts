@@ -17,12 +17,16 @@ export interface Resource {
 }
 
 export interface SkillArray {
-    id: number,
+    id?: number | null | undefined,
     activeLearning: boolean | undefined,
     tag: Tag,
-    tagId: number,
+    tagId?: number | null | undefined,
 }
 
 export interface Tag {
     skillName: string,
+}
+
+export interface UserSkills extends User {
+    userSkills: SkillArray[]
 }

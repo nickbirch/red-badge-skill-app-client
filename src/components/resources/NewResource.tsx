@@ -24,7 +24,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 interface AcceptedProps extends WithStyles<typeof styles> {
   userToken: string,
   baseURL: string,
-  activeTagId: number | null,
+  activeTagId: number | null | undefined,
   getResources(): void,
 }
 

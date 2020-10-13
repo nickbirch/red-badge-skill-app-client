@@ -26,8 +26,8 @@ interface AcceptedProps extends WithStyles<typeof styles> {
 
 interface IState {
     skillArray: SkillArray[],
-    activeSkillId: number | null,
-    activeTagId: number | null,
+    activeSkillId: number | null | undefined,
+    activeTagId: number | null | undefined,
     activeTagName: string,
     editOpen: boolean;
     activeSkillBoolean: boolean | undefined;
@@ -36,7 +36,7 @@ interface IState {
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-        width: "90vh",
+        maxWidth: "100vh",
         minHeight: "140vh",
         backgroundColor: "#3585bb",
         paddingTop: "3rem",

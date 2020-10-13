@@ -22,7 +22,7 @@ interface AcceptedProps extends WithStyles<typeof styles> {
   resourcesArray: Resource[];
   baseURL: string;
   userToken: string;
-  activeTagId: number | null,
+  activeTagId: number | null | undefined,
   getResources(): void;
 }
 
@@ -50,7 +50,7 @@ const styles = (theme: Theme) =>
       background:
         "linear-gradient(90deg, rgba(44, 44, 44, 0.81) 0%, rgba(44, 44, 44, 0.962647) 80.34%, #2C2C2C 100%)",
       borderRadius: "1.75rem",
-      margin: "1rem",
+      margin: "1.5rem",
       flexGrow: 1,
     },
     header: {
