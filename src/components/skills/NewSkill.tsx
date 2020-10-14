@@ -19,8 +19,8 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import Chip from "@material-ui/core/Chip";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import SaveIcon from '@material-ui/icons/Save';
-import CancelIcon from '@material-ui/icons/Cancel';
+import SaveIcon from "@material-ui/icons/Save";
+import CancelIcon from "@material-ui/icons/Cancel";
 
 interface AcceptedProps extends WithStyles<typeof styles> {
   userToken: string;
@@ -36,7 +36,7 @@ interface IState {
   tagArray: TagArray[];
   open: boolean;
   activeLearning: boolean;
-  searchField: string;
+  searchField: string[];
 }
 
 const styles = (theme: Theme) =>
@@ -55,9 +55,9 @@ const styles = (theme: Theme) =>
       paddingLeft: "1rem",
     },
     flex: {
-        justifyContent: 'space-between',
-        display: "flex",
-    }
+      justifyContent: "space-between",
+      display: "flex",
+    },
   });
 
 export class NewSkill extends Component<AcceptedProps, IState> {
@@ -67,7 +67,7 @@ export class NewSkill extends Component<AcceptedProps, IState> {
       tagArray: [],
       open: false,
       activeLearning: true,
-      searchField: "",
+      searchField: [],
     };
   }
 
@@ -112,43 +112,46 @@ export class NewSkill extends Component<AcceptedProps, IState> {
     });
   };
 
-  updateSearchField = (value: string) => {
+  updateSearchField = (value: string[]) => {
     this.setState({
       searchField: value,
     });
   };
 
-  addNewSkill = () => {
+  addNewSkill = async () => {
     let url: string = `${this.props.baseURL}myskills/add`;
-    let skillObject: { skillName: string; activeLearning: boolean } = {
-      skillName: this.state.searchField,
-      activeLearning: this.state.activeLearning,
-    };
 
-    fetch(url, {
-      method: "POST",
-      headers: new Headers({
-        "Content-Type": "application/json",
-        Authorization: this.props.userToken,
-      }),
-      body: JSON.stringify({ skill: skillObject }),
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          return res.json();
-        } else {
-          return res.status;
-        }
+    for (let i = 0; i < this.state.searchField.length; i++) {
+      let skillObject: { skillName: string; activeLearning: boolean } = {
+        skillName: this.state.searchField[i],
+        activeLearning: this.state.activeLearning,
+      };
+
+      await fetch(url, {
+        method: "POST",
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Authorization: this.props.userToken,
+        }),
+        body: JSON.stringify({ skill: skillObject }),
       })
-      .then(() => {
-        this.setState({
-            open: false,
-          });
-        this.props.getSkills();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+        .then((res) => {
+          if (res.status === 200) {
+            return res.json();
+          } else {
+            return res.status;
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
+    this.setState({
+      open: false,
+      searchField: [],
+    });
+    this.props.getSkills();
   };
 
   render() {
@@ -169,10 +172,14 @@ export class NewSkill extends Component<AcceptedProps, IState> {
           onClose={this.handleClose}
           aria-labelledby="form-dialog-title"
         >
-            <div className={classes.flex}>
-          <DialogTitle id="form-dialog-title">Add Skill</DialogTitle>
-          <Button onClick={this.handleClose} size="large" color="primary" startIcon={<CancelIcon />} >
-          </Button>
+          <div className={classes.flex}>
+            <DialogTitle id="form-dialog-title">Add Skill</DialogTitle>
+            <Button
+              onClick={this.handleClose}
+              size="large"
+              color="primary"
+              startIcon={<CancelIcon />}
+            ></Button>
           </div>
           <DialogContent>
             <DialogContentText>
@@ -183,9 +190,9 @@ export class NewSkill extends Component<AcceptedProps, IState> {
             <Autocomplete
               className={classes.search}
               disableClearable
-              //multiple https://material-ui.com/components/autocomplete/#multiple-values
-              inputValue={this.state.searchField}
-              onInputChange={(event, newInputValue) => {
+              multiple
+              value={this.state.searchField}
+              onChange={(event, newInputValue) => {
                 this.updateSearchField(newInputValue);
               }}
               options={this.state.tagArray.map(
@@ -193,8 +200,6 @@ export class NewSkill extends Component<AcceptedProps, IState> {
               )}
               renderInput={(params) => (
                 <TextField
-                  //   value={this.state.searchField}
-                  //   onChange={(e) => this.setState({searchField: e.target.value})}
                   {...params}
                   label="Search Skills"
                   margin="normal"
@@ -219,7 +224,12 @@ export class NewSkill extends Component<AcceptedProps, IState> {
             />
           </FormGroup>
           <DialogActions>
-            <Button onClick={this.addNewSkill} color="primary" variant="contained" startIcon={<SaveIcon />}>
+            <Button
+              onClick={this.addNewSkill}
+              color="primary"
+              variant="contained"
+              startIcon={<SaveIcon />}
+            >
               Save
             </Button>
           </DialogActions>
