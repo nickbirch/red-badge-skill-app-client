@@ -62,6 +62,11 @@ const styles = (theme: Theme) =>
       fontSize: "1.25rem",
       textDecoration: "none",
     },
+    headerEmpty: {
+      color: theme.palette.primary.contrastText,
+      fontSize: "1.25rem",
+      textDecoration: "none",
+    },
     chip: {
       margin: theme.spacing(0.5),
       background: "linear-gradient(147.85deg, #00C102 11.75%, #00C102 86.71%)",
@@ -179,85 +184,89 @@ export class ResourceCard extends Component<AcceptedProps, IState> {
             />
           ) : null}
 
-          {this.props.resourcesArray.length > 0
-            ? this.props.resourcesArray.map((resource: Resource, index) => {
-                return (
-                  <li key={index}>
-                    <Card className={classes.resourceCard}>
-                      <CardHeader
-                        className={classes.header}
-                        title={
+          {this.props.resourcesArray.length > 0 ? (
+            this.props.resourcesArray.map((resource: Resource, index) => {
+              return (
+                <li key={index}>
+                  <Card className={classes.resourceCard}>
+                    <CardHeader
+                      className={classes.header}
+                      title={
+                        <a
+                          href={`${resource.link}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={classes.link}
+                        >
+                          {resource.title}
+                        </a>
+                      }
+                      action={
+                        <IconButton
+                          onClick={() => this.toggleEdit(resource)}
+                          color="inherit"
+                          className={classes.edit}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      }
+                    />
+                    <CardContent>
+                      <Grid container spacing={3}>
+                        <Grid item xs={3} className={classes.type}>
+                          <Typography className={classes.imageTitle}>
+                            {`${resource.type}`}
+                          </Typography>
+                          <Paper className={classes.imagePaper}>
+                            <a
+                              href={`${resource.link}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <img
+                                src={`https://www.google.com/s2/favicons?sz=64&domain_url=${resource.link}`}
+                                alt=""
+                                className={classes.image}
+                              />
+                            </a>
+                          </Paper>
+                        </Grid>
+                        <Grid item xs={9}>
+                          <Typography className={classes.title}>
+                            Description:
+                          </Typography>
                           <a
                             href={`${resource.link}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className={classes.link}
                           >
-                            {resource.title}
-                          </a>
-                        }
-                        action={
-                          <IconButton
-                            onClick={() => this.toggleEdit(resource)}
-                            color="inherit"
-                            className={classes.edit}
-                          >
-                            <EditIcon />
-                          </IconButton>
-                        }
-                      />
-                      <CardContent>
-                        <Grid container spacing={3}>
-                          <Grid item xs={3} className={classes.type}>
-                            <Typography className={classes.imageTitle}>
-                              {`${resource.type}`}
-                            </Typography>
-                            <Paper className={classes.imagePaper}>
-                              <a
-                                href={`${resource.link}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                <img
-                                  src={`https://www.google.com/s2/favicons?sz=64&domain_url=${resource.link}`}
-                                  alt=""
-                                  className={classes.image}
-                                />
-                              </a>
+                            <Paper className={classes.paper}>
+                              <Typography className={classes.description}>
+                                {`${resource.description}`}
+                              </Typography>
                             </Paper>
-                          </Grid>
-                          <Grid item xs={9}>
-                            <Typography className={classes.title}>
-                              Description:
-                            </Typography>
-                            <a
-                              href={`${resource.link}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className={classes.link}
-                            >
-                              <Paper className={classes.paper}>
-                                <Typography className={classes.description}>
-                                  {`${resource.description}`}
-                                </Typography>
-                              </Paper>
-                            </a>
-                            <Typography className={classes.title}>
-                              Tags:
-                            </Typography>
-                            <ResourceTags
-                              userToken={this.props.userToken}
-                              baseURL={this.props.baseURL}
-                              resourceId={resource.id}
-                            />
-                          </Grid>
+                          </a>
+                          <Typography className={classes.title}>
+                            Tags:
+                          </Typography>
+                          <ResourceTags
+                            userToken={this.props.userToken}
+                            baseURL={this.props.baseURL}
+                            resourceId={resource.id}
+                          />
                         </Grid>
-                      </CardContent>
-                    </Card>
-                  </li>
-                );
-              })
-            : null}
+                      </Grid>
+                    </CardContent>
+                  </Card>
+                </li>
+              );
+            })
+          ) : (
+            <Typography className={classes.headerEmpty}>
+              No Resources yet - add the first one!
+            </Typography>
+          )}
         </ul>
         {this.state.editOpen ? (
           <EditResource
