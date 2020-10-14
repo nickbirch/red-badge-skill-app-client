@@ -58,16 +58,20 @@ export class ResourceView extends Component<AcceptedProps, IState> {
             this.setState({
               resourcesArray: json.resources,
             });
-          } 
+          } else {
+            this.setState({
+              resourcesArray: [],
+            });
+          }
         })
         .catch((err) => {
           console.log(err);
         });
     } else {
-        this.setState({
-          resourcesArray: [],
-        });
-      }
+      this.setState({
+        resourcesArray: [],
+      });
+    }
   };
 
   componentDidUpdate(prevProps: any) {
