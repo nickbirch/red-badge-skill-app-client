@@ -22,8 +22,9 @@ interface AcceptedProps extends WithStyles<typeof styles> {
   resourcesArray: Resource[];
   baseURL: string;
   userToken: string;
-  activeTagId: number | null | undefined,
+  activeTagId: number | null | undefined;
   getResources(): void;
+  skillsLength: number;
 }
 
 interface IState {
@@ -169,7 +170,15 @@ export class ResourceCard extends Component<AcceptedProps, IState> {
     return (
       <React.Fragment>
         <ul className={classes.root}>
-        <NewResource userToken={this.props.userToken} baseURL={this.props.baseURL} activeTagId={this.props.activeTagId} getResources={this.props.getResources} />
+          {this.props.skillsLength > 0 ? (
+            <NewResource
+              userToken={this.props.userToken}
+              baseURL={this.props.baseURL}
+              activeTagId={this.props.activeTagId}
+              getResources={this.props.getResources}
+            />
+          ) : null}
+
           {this.props.resourcesArray.length > 0
             ? this.props.resourcesArray.map((resource: Resource, index) => {
                 return (
