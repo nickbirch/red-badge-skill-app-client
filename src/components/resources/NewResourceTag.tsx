@@ -33,7 +33,7 @@ interface TagArray {
 interface IState {
   tagArray: TagArray[];
   open: boolean;
-  searchField: string;
+  searchField: string[];
 }
 
 const styles = (theme: Theme) =>
@@ -63,7 +63,7 @@ export class NewResourceTag extends Component<AcceptedProps, IState> {
     this.state = {
       tagArray: [],
       open: false,
-      searchField: "",
+      searchField: [],
     };
   }
 
@@ -89,13 +89,14 @@ export class NewResourceTag extends Component<AcceptedProps, IState> {
       });
   };
 
-  addNewTag = () => {
+  addNewTag = async () => {
     let url: string = `${this.props.baseURL}resource/addtag/${this.props.resourceId}`;
+    for (let i = 0; i < this.state.searchField.length; i++) {
     let skillObject: { skillName: string; } = {
-      skillName: this.state.searchField,
+      skillName: this.state.searchField[i],
     };
 
-    fetch(url, {
+    await fetch(url, {
       method: "POST",
       headers: new Headers({
         "Content-Type": "application/json",
@@ -110,15 +111,15 @@ export class NewResourceTag extends Component<AcceptedProps, IState> {
           return res.status;
         }
       })
-      .then(() => {
-        this.setState({
-            open: false,
-          });
-          this.props.getResourceTags();
-      })
       .catch((err) => {
         console.log(err);
       });
+    }
+    this.setState({
+      open: false,
+      searchField: [],
+    });
+    this.props.getResourceTags();
   };
 
   handleClickOpen = () => {
@@ -134,7 +135,7 @@ export class NewResourceTag extends Component<AcceptedProps, IState> {
     });
   };
 
-  updateSearchField = (value: string) => {
+  updateSearchField = (value: string[]) => {
     this.setState({
       searchField: value,
     });
@@ -173,8 +174,9 @@ export class NewResourceTag extends Component<AcceptedProps, IState> {
             <Autocomplete
               className={classes.search}
               disableClearable
-              inputValue={this.state.searchField}
-              onInputChange={(event, newInputValue) => {
+              multiple
+              value={this.state.searchField}
+              onChange={(event, newInputValue) => {
                 this.updateSearchField(newInputValue);
               }}
               options={this.state.tagArray.map(
@@ -182,8 +184,6 @@ export class NewResourceTag extends Component<AcceptedProps, IState> {
               )}
               renderInput={(params) => (
                 <TextField
-                  //   value={this.state.searchField}
-                  //   onChange={(e) => this.setState({searchField: e.target.value})}
                   {...params}
                   label="Search Skills"
                   margin="normal"
