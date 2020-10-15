@@ -19,7 +19,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
-// const getTitleAtUrl = require('get-title-at-url');
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 interface AcceptedProps extends WithStyles<typeof styles> {
   userToken: string,
@@ -35,6 +35,7 @@ interface IState {
     type: string,
     link: string,
     open: boolean,
+    loading: boolean,
 }
 
 const styles = (theme: Theme) =>
@@ -51,6 +52,9 @@ const styles = (theme: Theme) =>
       flex: {
         justifyContent: 'space-between',
         display: "flex",
+      },
+      dialog: {
+        minWidth: '500px',
       },
       header: {
         background: "linear-gradient(147.85deg, #00C102 11.75%, #00C102 86.71%)",
@@ -89,6 +93,7 @@ export class NewResource extends Component<AcceptedProps, IState> {
         type: '',
         link: '',
         open: false,
+        loading: false,
     };
   }
 
@@ -129,17 +134,13 @@ export class NewResource extends Component<AcceptedProps, IState> {
     });
   };
 
-//   componentDidUpdate(prevState: any) {
-//       if (prevState.link !== this.state.link && this.state.link !== '') {
-//         getTitleAtUrl(this.state.link, function(title: string){
-//             console.log(title);
-//           });
-//      } 
-//     }
-
-
   addResource = (e: React.FormEvent<HTMLFormElement>) => {  
     e.preventDefault();
+
+    this.setState({
+      loading: true,
+    })
+
     let url: string = `${this.props.baseURL}resource/add`;
     let reqObject = {
         resource: 
@@ -170,6 +171,11 @@ export class NewResource extends Component<AcceptedProps, IState> {
         }
       })
       .then(() => {
+          this.setState({
+            link: '',
+            type: '',
+            loading: false,
+          })
           this.handleClose();
           this.props.getResources();
       })
@@ -187,6 +193,7 @@ export class NewResource extends Component<AcceptedProps, IState> {
         <Card className={classes.resourceCard} onClick={this.handleClickOpen}>
             <CardHeader className={classes.header} title={"Add Resource"}  />
           </Card>
+          {this.state.loading ? <CircularProgress /> : 
         <Dialog
           open={this.state.open}
           onClose={this.handleClose}
@@ -211,7 +218,7 @@ export class NewResource extends Component<AcceptedProps, IState> {
                   value={this.state.link} 
                   onChange={this.updateLink}
                 />
-                <TextField
+                {/* <TextField
                   variant="outlined"
                   margin="normal"
                   required
@@ -235,7 +242,7 @@ export class NewResource extends Component<AcceptedProps, IState> {
                   value={this.state.description} 
                   onChange={this.updateDescription}
                   className={classes.formField}
-                />
+                /> */}
                 <FormControl required className={classes.selectField}>
                 <InputLabel>Type</InputLabel>
                 <Select
@@ -259,6 +266,7 @@ export class NewResource extends Component<AcceptedProps, IState> {
           </DialogActions>
             </form>
         </Dialog>
+  }
       </React.Fragment>
     );
   }

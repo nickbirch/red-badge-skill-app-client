@@ -19,3 +19,12 @@
   font-weight: 500 !important;
   font-size: inherit !important;
 }
+
+.MuiDialog-paperWidthSm {
+  min-width: 500px;
+}
+
+#resourcesCardHeader .MuiTypography-displayBlock {
+  max-width: 90%;
+  padding-left: 10%;
+}

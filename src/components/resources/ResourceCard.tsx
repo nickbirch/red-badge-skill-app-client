@@ -191,6 +191,7 @@ export class ResourceCard extends Component<AcceptedProps, IState> {
                   <Card className={classes.resourceCard}>
                     <CardHeader
                       className={classes.header}
+                      id="resourcesCardHeader"
                       title={
                         <a
                           href={`${resource.link}`}
