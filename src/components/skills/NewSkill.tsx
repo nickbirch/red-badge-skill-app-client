@@ -37,6 +37,7 @@ interface IState {
   open: boolean;
   activeLearning: boolean;
   searchField: string[];
+  newState: string;
 }
 
 const styles = (theme: Theme) =>
@@ -68,6 +69,7 @@ export class NewSkill extends Component<AcceptedProps, IState> {
       open: false,
       activeLearning: true,
       searchField: [],
+      newState: ''
     };
   }
 
@@ -83,9 +85,9 @@ export class NewSkill extends Component<AcceptedProps, IState> {
     })
       .then((res) => res.json())
       .then((json) => {
-        let edited = json.slice(0, 1000);
+       // let edited = json.slice(0, 1000);
         this.setState({
-          tagArray: edited,
+          tagArray: json,
         });
       })
       .catch((err) => {
@@ -115,6 +117,12 @@ export class NewSkill extends Component<AcceptedProps, IState> {
   updateSearchField = (value: string[]) => {
     this.setState({
       searchField: value,
+    });
+  };
+
+  updateNewState = (value: string) => {
+    this.setState({
+      newState: value,
     });
   };
 
@@ -191,6 +199,9 @@ export class NewSkill extends Component<AcceptedProps, IState> {
               className={classes.search}
               disableClearable
               multiple
+              freeSolo
+              // input={this.state.newState}
+              // onInputChange={(event, newInputValue) => {this.updateNewState(newInputValue)}}
               value={this.state.searchField}
               onChange={(event, newInputValue) => {
                 this.updateSearchField(newInputValue);
