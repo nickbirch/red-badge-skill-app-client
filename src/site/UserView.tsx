@@ -28,6 +28,7 @@ interface IState {
   activeSkillId: number | null | undefined;
   activeTagId: number | null | undefined;
   activeTagName: string;
+  activeSkillName: string;
   editOpen: boolean;
   activeSkillBoolean: boolean | undefined;
 }
@@ -70,6 +71,7 @@ export class UserView extends Component<AcceptedProps, IState> {
     this.state = {
       skillArray: [],
       activeSkillId: null,
+      activeSkillName: "",
       activeTagId: null,
       activeTagName: "",
       activeSkillBoolean: undefined,
@@ -109,12 +111,18 @@ export class UserView extends Component<AcceptedProps, IState> {
       });
   };
 
-  updateActiveSkillId = (value: SkillArray) => {
+  updateActiveTag = (value: SkillArray) => {
+    this.setState({
+      activeTagId: value.tagId,
+      activeTagName: value.tag.skillName,
+    });
+  };
+
+  updateActiveSkill = (value: SkillArray) => {
     this.setState({
       activeSkillId: value.id,
-      activeTagName: value.tag.skillName,
+      activeSkillName: value.tag.skillName,
       activeSkillBoolean: value.activeLearning,
-      activeTagId: value.tagId,
     });
   };
 
@@ -123,6 +131,12 @@ export class UserView extends Component<AcceptedProps, IState> {
       editOpen: editOpen,
     });
   };
+
+  updateSkillArray = (skillArray: SkillArray[]) => {
+    this.setState({
+      skillArray: skillArray,
+    })
+  }
 
   componentDidMount() {
     this.getSkills();
@@ -141,12 +155,14 @@ export class UserView extends Component<AcceptedProps, IState> {
             />
             <CardContent>
               <SkillChips
-                skills={this.state.skillArray}
+                skillArray={this.state.skillArray}
                 baseURL={this.props.baseURL}
-                updateActiveSkillId={this.updateActiveSkillId}
+                updateActiveTag={this.updateActiveTag}
                 userToken={this.props.userToken}
-                getSkills={this.getSkills}
                 handleEditClick={this.handleEditClick}
+                updateSkillArray={this.updateSkillArray}
+                updateActiveSkill={this.updateActiveSkill}
+                activeTagName={this.state.activeTagName}
               />
             </CardContent>
           </Card>
@@ -179,12 +195,12 @@ export class UserView extends Component<AcceptedProps, IState> {
           <EditSkill
             userToken={this.props.userToken}
             baseURL={this.props.baseURL}
-            getSkills={this.getSkills}
-            skillToEditName={this.state.activeTagName}
+            skillToEditName={this.state.activeSkillName}
             skillToEditId={this.state.activeSkillId}
             skillToEditBoolean={this.state.activeSkillBoolean}
             handleEditClick={this.handleEditClick}
             editOpen={this.state.editOpen}
+            updateSkillArray={this.updateSkillArray}
           />
         ) : null}
       </React.Fragment>

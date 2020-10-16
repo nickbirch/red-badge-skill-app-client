@@ -188,6 +188,7 @@ export class NewResourceTag extends Component<AcceptedProps, IState> {
                   label="Search Skills"
                   margin="normal"
                   variant="outlined"
+                  autoFocus
                   InputProps={{ ...params.InputProps, type: "search" }}
                 />
               )}

@@ -7,12 +7,14 @@ import { SkillArray } from '../../types';
 
 
 interface AcceptedProps {
-    skills: SkillArray[];
+    skillArray: SkillArray[];
     baseURL: string;
-    updateActiveSkillId(tagToShow: SkillArray): void;
+    updateActiveSkill(activeSkill: SkillArray): void;
+    updateActiveTag(tagToShow: SkillArray): void;
     userToken: string;
-    getSkills(): void;
     handleEditClick(arg: boolean): void;
+    updateSkillArray(skillArray: SkillArray[]): void;
+    activeTagName: string;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -38,6 +40,13 @@ const useStyles = makeStyles((theme: Theme) =>
         color: "#000",
         textTransform: "uppercase",
       },
+    chipClicked: {
+      background: "rgba(39, 72, 241)",
+      backgroundColor: "rgba(39, 72, 241)",
+      '&:focus': {
+        backgroundColor: "rgba(39, 72, 241)",
+      }
+    },
   }),
 );
 
@@ -45,24 +54,29 @@ const SkillChips: React.FunctionComponent<AcceptedProps> = (props) => {
   const classes = useStyles();
 
   const handleEdit = (skillToEdit: SkillArray) => {
-    props.updateActiveSkillId(skillToEdit)
+    props.updateActiveSkill(skillToEdit)
     props.handleEditClick(true)
   };
 
   const handleClick = (tagToShow: SkillArray) =>  {
-    props.updateActiveSkillId(tagToShow)
+    props.updateActiveTag(tagToShow)
   };
 
   return (
     <ul className={classes.root}>
-      {props.skills.map((skill: SkillArray, index) => {
+      {props.skillArray.map((skill: SkillArray, index) => {
 
         let checkIfActive;
+        let clicked;
 
         if (skill.activeLearning  === true) {
             checkIfActive = classes.chip
         } else {
             checkIfActive = classes.chipNotLearning
+        }
+
+        if (skill.tag.skillName === props.activeTagName) {
+            clicked = classes.chipClicked
         }
 
         return (
@@ -71,13 +85,13 @@ const SkillChips: React.FunctionComponent<AcceptedProps> = (props) => {
               label={skill.tag.skillName}
               onDelete={() => handleEdit(skill)}
               onClick={() => handleClick(skill)}
-              className={checkIfActive}
+              className={`${checkIfActive} ${clicked}`}
               deleteIcon={<EditIcon />}
             />
           </li>
         );
       })}
-      <NewSkill userToken={props.userToken} baseURL={props.baseURL} getSkills={props.getSkills} />
+      <NewSkill userToken={props.userToken} baseURL={props.baseURL} updateSkillArray={props.updateSkillArray} />
       </ul>
 );
 }

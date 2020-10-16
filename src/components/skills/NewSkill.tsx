@@ -21,11 +21,12 @@ import Chip from "@material-ui/core/Chip";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import SaveIcon from "@material-ui/icons/Save";
 import CancelIcon from "@material-ui/icons/Cancel";
+import { SkillArray } from '../../types'
 
 interface AcceptedProps extends WithStyles<typeof styles> {
   userToken: string;
   baseURL: string;
-  getSkills(): void;
+  updateSkillArray(skillArray: SkillArray[]): void;
 }
 
 interface TagArray {
@@ -126,6 +127,25 @@ export class NewSkill extends Component<AcceptedProps, IState> {
     });
   };
 
+  reGetSkills = () => {
+    let url: string = `${this.props.baseURL}myskills`;
+
+    fetch(url, {
+      method: "GET",
+      headers: new Headers({
+        "Content-Type": "application/json",
+        Authorization: this.props.userToken,
+      }),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+          this.props.updateSkillArray(json)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   addNewSkill = async () => {
     let url: string = `${this.props.baseURL}myskills/add`;
 
@@ -159,7 +179,7 @@ export class NewSkill extends Component<AcceptedProps, IState> {
       open: false,
       searchField: [],
     });
-    this.props.getSkills();
+    this.reGetSkills();
   };
 
   render() {
@@ -215,6 +235,7 @@ export class NewSkill extends Component<AcceptedProps, IState> {
                   label="Search Skills"
                   margin="normal"
                   variant="outlined"
+                  autoFocus
                   InputProps={{ ...params.InputProps, type: "search" }}
                 />
               )}

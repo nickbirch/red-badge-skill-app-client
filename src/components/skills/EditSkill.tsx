@@ -17,13 +17,14 @@ import Switch from "@material-ui/core/Switch";
 import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
+import { SkillArray } from '../../types';
 
 
 interface AcceptedProps extends WithStyles<typeof styles> {
   userToken: string;
   baseURL: string;
-  getSkills(): void;
   handleEditClick(arg: boolean): void;
+  updateSkillArray(skillArray: SkillArray[]): void;
   skillToEditId: number | null | undefined,
   skillToEditName: string,
   skillToEditBoolean: boolean | undefined,
@@ -63,6 +64,25 @@ export class EditSkill extends Component<AcceptedProps, IState> {
     });
   };
 
+  reGetSkills = () => {
+    let url: string = `${this.props.baseURL}myskills`;
+
+    fetch(url, {
+      method: "GET",
+      headers: new Headers({
+        "Content-Type": "application/json",
+        Authorization: this.props.userToken,
+      }),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+          this.props.updateSkillArray(json)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   updateSkill = () => {
     let url: string = `${this.props.baseURL}myskills/update/${this.props.skillToEditId}`;
     let skillObject: { activeLearning: boolean | undefined} = {
@@ -86,7 +106,7 @@ export class EditSkill extends Component<AcceptedProps, IState> {
       })
       .then(() => {
         this.props.handleEditClick(false)
-        this.props.getSkills();
+        this.reGetSkills();
       })
       .catch((err) => {
         console.log(err);
@@ -106,7 +126,7 @@ export class EditSkill extends Component<AcceptedProps, IState> {
       .then((res) => {
         if (res.status === 200) {
             this.props.handleEditClick(false)
-            this.props.getSkills();
+            this.reGetSkills();
         } else {
           return res.status;
         }
