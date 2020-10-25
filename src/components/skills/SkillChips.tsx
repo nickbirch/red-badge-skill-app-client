@@ -41,11 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
         textTransform: "uppercase",
       },
     chipClicked: {
-      background: "rgba(39, 72, 241)",
-      backgroundColor: "rgba(39, 72, 241)",
-      '&:focus': {
-        backgroundColor: "rgba(39, 72, 241)",
-      }
+      border: '0.2rem #00C102 solid',
     },
   }),
 );
