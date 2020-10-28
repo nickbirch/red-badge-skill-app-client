@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import SkillChips from "../components/skills/SkillChips";
 import EditSkill from "../components/skills/EditSkill";
 import ResourcesView from "../components/resources/ResourcesView";
+import RelatedSkills from "../components/skills/RelatedSkills";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
@@ -166,6 +167,12 @@ export class UserView extends Component<AcceptedProps, IState> {
               />
             </CardContent>
           </Card>
+          <RelatedSkills 
+          activeTagName={this.state.activeTagName} 
+          baseURL={this.props.baseURL}
+          userToken={this.props.userToken}
+          updateSkillArray={this.updateSkillArray}
+          />
           {this.state.skillArray.length > 0 ? (
             <Typography
               component="h1"

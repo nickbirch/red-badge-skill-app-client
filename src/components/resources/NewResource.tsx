@@ -61,7 +61,8 @@ const styles = (theme: Theme) =>
         color: theme.palette.primary.contrastText,
         fontSize: "1.25rem",
         textDecoration: "none",
-        cursor: 'pointer'
+        cursor: 'pointer',
+        textTransform: 'uppercase',
       },
       title: {
         textAlign: "left",

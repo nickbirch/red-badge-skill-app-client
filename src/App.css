@@ -28,3 +28,11 @@
   max-width: 90%;
   padding-left: 10%;
 }
+
+.MuiAccordion-rounded {
+  border-radius: 1.75rem !important;
+}
+
+.MuiAccordion-root.Mui-expanded:first-child {
+  margin-top: 1.5rem !important;
+}
