@@ -117,7 +117,6 @@ export class Login extends Component<AcceptedProps, LoginType> {
         this.setState({
           loading: false,
         });
-
         if (res.status === 200) {
           return res.json();
         } else {
@@ -212,7 +211,7 @@ export class Login extends Component<AcceptedProps, LoginType> {
                     onClick={this.props.toggleFormType}
                     className={classes.root}
                   >
-                    Don't have an account? Sign Up
+                    Don't have an account? Sign Up Instead
                   </Link>
                 </Grid>
               </Grid>

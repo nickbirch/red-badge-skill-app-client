@@ -249,7 +249,7 @@ export class Register extends Component<AcceptedProps, RegisterType> {
                     onClick={this.props.toggleFormType}
                     className={classes.root}
                   >
-                    Already have an account? Sign In
+                    Already have an account? Sign In Instead
                   </Link>
                 </Grid>
               </Grid>
